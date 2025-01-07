@@ -1,4 +1,16 @@
 import { Config } from './config';
+import app from './app';
 
-const port = Config.PORT;
-console.log(port);
+const startServer = () => {
+  const PORT = Config.PORT;
+  try {
+    app.listen(PORT, () => {
+      console.log(`Server is listening on port ${PORT}`);
+    });
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+};
+
+startServer();
