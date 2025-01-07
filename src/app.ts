@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import express from 'express';
 import logger from './config/logger';
 import { HttpError } from 'http-errors';
@@ -9,7 +10,7 @@ app.get('/', (req, res) => {
 });
 
 // Global error handler
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 app.use(
   (
     err: HttpError,
