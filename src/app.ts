@@ -2,12 +2,15 @@
 import express from 'express';
 import logger from './config/logger';
 import { HttpError } from 'http-errors';
+import authRouter from './routes/auth';
 
 const app = express();
 
 app.get('/', (req, res) => {
-  res.send('Welcome to auth-service hello');
+  res.send('Welcome to auth-service!!! ');
 });
+
+app.use('/auth', authRouter);
 
 // Global error handler
 

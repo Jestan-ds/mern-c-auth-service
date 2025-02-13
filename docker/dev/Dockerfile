@@ -4,6 +4,8 @@ FROM node:18
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
+VOLUME /usr/src/app
+
 # Copy package.json and package-lock.json first to leverage Docker cache
 COPY package*.json ./
 

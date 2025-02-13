@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  auth-service:
+    image: auth-service:dev
+    build: .
+    ports:
+      - "5501:5501"
+    volumes:
+      -type: bind
+        - .c:/MernStack/auth-service:/usr/src/app
+        - ./node_modules:/usr/src/app/node_modules
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
