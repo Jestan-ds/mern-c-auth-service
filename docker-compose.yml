@@ -5,7 +5,7 @@ services:
     image: auth-service:dev
     build: .
     ports:
-      - "5501:5501"
+      - '5501:5501'
     volumes:
       -type: bind
         - .c:/MernStack/auth-service:/usr/src/app
