@@ -8,8 +8,16 @@ export class AuthController {
 
   async register(req: RegisterUserRequest, res: Response) {
     const { firstName, lastName, email, password } = req.body;
-    await this.userService.create({ firstName, lastName, email, password });
+    const user = await this.userService.create({
+      firstName,
+      lastName,
+      email,
+      password,
+    });
 
-    res.status(201).json({});
+    // return the id of created user
+    res.status(201).json({
+      id: user.id,
+    });
   }
 }

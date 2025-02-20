@@ -6,11 +6,12 @@ export class UserService {
   constructor(private userRepository: Repository<User>) {}
   async create({ firstName, lastName, email, password }: UserData) {
     // create user in the database
-    await this.userRepository.save({
+    const user = await this.userRepository.save({
       firstName,
       lastName,
       email,
       password,
     });
+    return user;
   }
 }
