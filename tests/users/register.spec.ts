@@ -1,7 +1,31 @@
 import request from 'supertest';
 import app from '../../src/app';
+import { DataSource } from 'typeorm';
+import { AppDataSource } from '../../src/config/data-source';
+import { User } from '../../src/entity/User';
+import { truncateTables } from '../../tests/utills/index';
 
 describe('POST /auth/register', () => {
+  let connection: DataSource;
+  //running this before all tests
+  beforeAll(async () => {
+    try {
+      connection = await AppDataSource.initialize();
+      console.log('Database connection initialized');
+    } catch (error) {
+      console.error('Failed to initialize database connection:', error);
+    }
+  });
+  //truncate the table after each test or database reset
+  beforeEach(async () => {
+    await truncateTables(connection);
+  });
+
+  //close the connection after all tests
+  afterAll(async () => {
+    await connection.destroy();
+  });
+
   describe('Given all the fields', () => {
     it('should return 201', async () => {
       //Arrange
@@ -42,15 +66,11 @@ describe('POST /auth/register', () => {
         password: 'password',
       };
       //Act
-      const respose = await request(app).post('/auth/register').send(userData);
+      await request(app).post('/auth/register').send(userData);
       //assert
-      expect(respose.statusCode).toBe(201);
-      expect(respose.body).toHaveProperty('id');
-      expect(respose.body).toHaveProperty('firstName');
-      expect(respose.body).toHaveProperty('lastName');
-      expect(respose.body).toHaveProperty('email');
-      expect(respose.body).toHaveProperty('createdAt');
-      expect(respose.body).toHaveProperty('updatedAt');
+      const userRepository = connection.getRepository(User);
+      const users = await userRepository.find();
+      expect(users).toHaveLength(1);
     });
   });
 

@@ -11,7 +11,6 @@ const startServer = () => {
   } catch (error) {
     console.log(error);
     process.exit(1);
-    console.log('Server failed to start');
   }
 };
 
