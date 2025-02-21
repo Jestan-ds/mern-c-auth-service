@@ -3,24 +3,20 @@ import app from '../../src/app';
 import { DataSource } from 'typeorm';
 import { AppDataSource } from '../../src/config/data-source';
 import { User } from '../../src/entity/User';
-import { truncateTables } from '../../tests/utills/index';
+import { Roles } from '../../src/constants';
 
 describe('POST /auth/register', () => {
   let connection: DataSource;
   //running this before all tests
 
   beforeAll(async () => {
-    try {
-      connection = await AppDataSource.initialize();
-      console.log('Database connection initialized');
-    } catch (error) {
-      console.error('Failed to initialize database connection:', error);
-    }
+    connection = await AppDataSource.initialize();
   });
 
   //truncate the table after each test or database reset
   beforeEach(async () => {
-    await truncateTables(connection);
+    await connection.dropDatabase();
+    await connection.synchronize();
   });
 
   //close the connection after all tests
@@ -94,6 +90,23 @@ describe('POST /auth/register', () => {
       const userRepository = connection.getRepository(User);
       const users = await userRepository.find();
       expect(users[0].id).toBe((respose.body as Record<string, string>).id);
+    });
+
+    it('should assign a customer role to the user by default', async () => {
+      //Arrange
+      const userData = {
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'xN0wZ@example.com',
+        password: 'password',
+      };
+      //Act
+      await request(app).post('/auth/register').send(userData);
+      //assert
+      const userRepository = connection.getRepository(User);
+      const users = await userRepository.find();
+      expect(users[0]).toHaveProperty('role');
+      expect(users[0].role).toBe(Roles.CUSTOMER);
     });
   });
 
