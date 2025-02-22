@@ -17,14 +17,17 @@ export class AuthController {
     const result = validationResult(req);
     if (!result.isEmpty()) {
       res.status(400).json({ errors: result.array() });
+      return;
     }
 
     const { firstName, lastName, email, password } = req.body;
+
     // if(!email){
     //   const error = createHttpError(400, 'Email is required');
     //   next(error);
     //   return
     // }
+
     this.logger.debug('New Request to register user', {
       firstName,
       lastName,

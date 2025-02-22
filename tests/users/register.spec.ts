@@ -4,6 +4,7 @@ import { DataSource } from 'typeorm';
 import { AppDataSource } from '../../src/config/data-source';
 import { User } from '../../src/entity/User';
 import { Roles } from '../../src/constants';
+import { truncateTables } from '../utills';
 
 describe('POST /auth/register', () => {
   let connection: DataSource;
@@ -15,6 +16,7 @@ describe('POST /auth/register', () => {
 
   //truncate the table after each test or database reset
   beforeEach(async () => {
+    await truncateTables(connection);
     await connection.dropDatabase();
     await connection.synchronize();
   });
@@ -163,8 +165,27 @@ describe('POST /auth/register', () => {
       const userRepository = connection.getRepository(User);
       const users = await userRepository.find();
       //assert
-
       expect(users).toHaveLength(0);
+    });
+  });
+
+  describe('Fields are not in proper format', () => {
+    it('should trim the email field', async () => {
+      //Arrange
+      const userData = {
+        firstName: 'John',
+        lastName: 'Doe',
+        email: '  xN0wZ@example.com  ',
+        password: 'password',
+      };
+      //Act
+      await request(app).post('/auth/register').send(userData);
+      //assert
+      const userRepository = connection.getRepository(User);
+      const users = await userRepository.find();
+      const user = users[0];
+      console.log(user);
+      expect(user.email).toBe('xN0wZ@example.com');
     });
   });
 });
