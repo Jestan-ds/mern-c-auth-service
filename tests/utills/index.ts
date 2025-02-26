@@ -1,3 +1,4 @@
+import { error } from 'console';
 import { DataSource } from 'typeorm';
 
 export const truncateTables = async (connection: DataSource) => {
@@ -6,5 +7,22 @@ export const truncateTables = async (connection: DataSource) => {
   for (const entity of entities) {
     const repository = connection.getRepository(entity.name);
     await repository.clear();
+  }
+};
+
+export const isjwt = (token: string | null): boolean => {
+  if (token === null) return false;
+  const parts = token.split('.');
+  if (parts.length !== 3) return false;
+
+  try {
+    parts.forEach((part) => {
+      Buffer.from(part, 'base64').toString('utf-8');
+    });
+
+    return true;
+  } catch (e) {
+    error(e);
+    return false;
   }
 };
