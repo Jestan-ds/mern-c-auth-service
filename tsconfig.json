@@ -25,7 +25,6 @@
     // "noLib": true,                                    /* Disable including any library files, including the default lib.d.ts. */
     // "useDefineForClassFields": true,                  /* Emit ECMAScript-standard-compliant class fields. */
     // "moduleDetection": "auto",                        /* Control what method is used to detect module-format JS files. */
-    
 
     /* Modules */
     "module": "commonjs" /* Specify what module code is generated. */,
@@ -52,7 +51,7 @@
     // "noResolve": true,                                /* Disallow 'import's, 'require's or '<reference>'s from expanding the number of files TypeScript should add to a project. */
 
     /* JavaScript Support */
-     "allowJs": true,                                  /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */
+    "allowJs": true /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */,
     // "checkJs": true,                                  /* Enable error reporting in type-checked JavaScript files. */
     // "maxNodeModuleJsDepth": 1,                        /* Specify the maximum folder depth used for checking JavaScript files from 'node_modules'. Only applicable with 'allowJs'. */
 
@@ -117,13 +116,12 @@
     "experimentalDecorators": true
   },
   //"allowDefaultProject": true,
- "include": [
-   "src/**/*",
+  "include": [
+    "src/**/*",
     "scripts/**/*js",
     "tests/**/*",
     "tests/utills/**/*",
     "app.spec.ts"
   ],
-  "allowDefaultProject": true,
- 
+  "allowDefaultProject": true
 }
