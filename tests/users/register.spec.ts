@@ -3,8 +3,9 @@ import app from '../../src/app';
 import { DataSource } from 'typeorm';
 import { AppDataSource } from '../../src/config/data-source';
 import { User } from '../../src/entity/User';
+import { RefreshToken } from '../../src/entity/RefreshToken';
 import { Roles } from '../../src/constants';
-import { isjwt, truncateTables } from '../utills';
+import { isjwt } from '../utills';
 
 describe('POST /auth/register', () => {
   let connection: DataSource;
@@ -16,7 +17,7 @@ describe('POST /auth/register', () => {
 
   //truncate the table after each test or database reset
   beforeEach(async () => {
-    await truncateTables(connection);
+    // await truncateTables(connection);
     await connection.dropDatabase();
     await connection.synchronize();
   });
@@ -182,6 +183,30 @@ describe('POST /auth/register', () => {
 
       expect(isjwt(accessToken)).toBeTruthy();
       expect(isjwt(refreshToken)).toBeTruthy();
+    });
+
+    it('should store refresh token in the database', async () => {
+      //Arrange
+      const userData = {
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'xN0wZ@example.com',
+        password: 'password',
+      };
+      //Act
+      const response = await request(app).post('/auth/register').send(userData);
+      //assert
+      const refreshTokenRepos = connection.getRepository(RefreshToken);
+      // const refreshTokens = await refreshTokenRepos.find();
+      // expect(refreshTokens).toHaveLength(1);
+
+      const tokens = await refreshTokenRepos
+        .createQueryBuilder('refreshToken')
+        .where('refreshToken.userId=:userId', {
+          userId: (response.body as Record<string, string>).id,
+        })
+        .getMany();
+      expect(tokens).toHaveLength(1);
     });
   });
 
