@@ -1,5 +1,7 @@
 import { DataSource } from 'typeorm';
 import { AppDataSource } from '../../src/config/data-source';
+import request from 'supertest';
+import app from '../../src/app';
 
 describe('POST /auth/login', () => {
   let connection: DataSource;
@@ -21,5 +23,28 @@ describe('POST /auth/login', () => {
     await connection.destroy();
   });
 
-  describe('Given all the fields', () => {});
+  describe('Given all the fields', () => {
+    it('should return 200', async () => {
+      //Arrange
+      const userData = {
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'xN0wZ@example.com',
+        password: 'password',
+      };
+      const loginData = {
+        email: 'xN0wZ@example.com',
+        password: 'password',
+      };
+      //Act
+      await request(app).post('/auth/register').send(userData);
+      const response = await request(app).post('/auth/login').send(loginData);
+
+      //assert
+
+      //assert
+      expect(response.statusCode).toBe(200);
+    });
+    it('should return access and refresh tokens in cookies', async () => {});
+  });
 });

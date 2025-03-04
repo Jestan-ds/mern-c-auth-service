@@ -164,7 +164,7 @@ export class AuthController {
       });
 
       // return the id of created user
-      res.json({
+      res.status(200).json({
         id: user.id,
       });
     } catch (error) {
