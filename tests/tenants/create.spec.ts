@@ -35,5 +35,19 @@ describe('POST /Tenants', () => {
       //Assert
       expect(response.statusCode).toBe(201);
     });
+    it('should create a tenant in the database', async () => {
+      //Arrange
+      const tenantData = {
+        name: 'Tenant name',
+        address: '123 Test St',
+      };
+      await request(app).post('/tenants').send(tenantData);
+
+      const tenantRepository = connection.getRepository('Tenant');
+      const tenants = await tenantRepository.find();
+      //Assert
+      expect(tenants[0]).toHaveLength(1);
+      expect(tenants[0].name).toBe(tenantData.name);
+    });
   });
 });
