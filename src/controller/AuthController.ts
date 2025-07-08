@@ -8,6 +8,7 @@ import { validationResult } from 'express-validator';
 import { TokenService } from '../services/TokenService';
 import createHttpError from 'http-errors';
 import { CredentialService } from '../services/CredentialService';
+import { Roles } from '../constants';
 // import createHttpError from 'http-errors';
 
 export class AuthController {
@@ -46,6 +47,7 @@ export class AuthController {
         lastName,
         email,
         password,
+        role: Roles.CUSTOMER, // default role
       });
       this.logger.info('User Has Been Registered Successfully', {
         id: user.id,
@@ -113,7 +115,7 @@ export class AuthController {
     //check if email exists in database
     //compare password
     try {
-      const user = await this.userService.findByEmail(email);
+      const user = await this.userService.findByEmailWithPassword(email);
       if (!user) {
         const error = createHttpError(400, "Email password doesn't match");
         next(error);
