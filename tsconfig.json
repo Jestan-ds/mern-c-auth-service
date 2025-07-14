@@ -113,14 +113,7 @@
     "experimentalDecorators": true
   },
   "allowDefaultProject": true,
-  "include": [
-    "./src/**/*",
-    "./scripts/**/*",
-  ],
-  
-  "exclude": [
-    "**/*.spec.ts","tests"
-  ],
-  
+  "include": ["./src/**/*", "./scripts/**/*"],
 
+  "exclude": ["**/*.spec.ts", "tests"]
 }
